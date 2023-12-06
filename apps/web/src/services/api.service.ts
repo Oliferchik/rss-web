@@ -1,8 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import config from 'config';
-
 export class ApiError extends Error {
   __proto__: ApiError;
 
@@ -120,7 +118,7 @@ class ApiClient {
 }
 
 export default new ApiClient({
-  baseURL: config.API_URL,
+  baseURL: 'https://aumcxnet3y45qpceewokrh6mgu0gxnvi.lambda-url.eu-north-1.on.aws/',
   withCredentials: true,
   responseType: 'json',
 });

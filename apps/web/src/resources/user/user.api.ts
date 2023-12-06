@@ -1,7 +1,5 @@
 import { useQuery } from 'react-query';
 
-import { User } from 'types';
-
 import { apiService } from 'services';
 
 export function useList<T>(params: T) {
@@ -9,7 +7,7 @@ export function useList<T>(params: T) {
 
   interface UserListResponse {
     count: number;
-    items: User[];
+    items: any[];
     totalPages: number;
   }
 

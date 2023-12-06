@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Head from 'next/head';
 import { NextPage } from 'next';
-import { TextInput, PasswordInput, Button, Group, Stack, Title, Alert } from '@mantine/core';
+import { TextInput, PasswordInput, Button, Stack, Title, Alert } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import { accountApi } from 'resources/account';
