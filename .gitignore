@@ -1,6 +1,0 @@
-.idea
-.turbo
-.DS_Store
-/node_modules
-dist
-coverage

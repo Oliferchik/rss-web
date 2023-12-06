@@ -11,8 +11,6 @@ export enum LayoutType {
 export enum RoutePath {
   // Private paths
   Home = '/',
-  Profile = '/profile',
-
   // Auth paths
   SignIn = '/sign-in',
 
@@ -29,10 +27,6 @@ type RoutesConfiguration = {
 export const routesConfiguration: RoutesConfiguration = {
   // Private routes
   [RoutePath.Home]: {
-    scope: ScopeType.PRIVATE,
-    layout: LayoutType.MAIN,
-  },
-  [RoutePath.Profile]: {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },

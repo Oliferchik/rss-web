@@ -1,11 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ComboboxItem } from '@mantine/core';
 
-import { User } from 'types';
-
 export const PER_PAGE = 5;
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
