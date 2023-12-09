@@ -1,0 +1,14 @@
+service: rss-lambda
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, 'eu-north-1'}
+  environment: 
+    STAGE: ${opt:stage, 'dev'}
+
+functions:
+  authenticator:
+    handler: functions/authenticator.handler
