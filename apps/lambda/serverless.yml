@@ -12,3 +12,5 @@ provider:
 functions:
   authenticator:
     handler: functions/authenticator.handler
+  get-posts:
+    handler: functions/get-posts.handler
