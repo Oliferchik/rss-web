@@ -1,31 +1,30 @@
-const AWS = require('aws-sdk');
 const jwt = require('jsonwebtoken');
 
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const userHelpers = require('../helpers/user.helpers');
 
-const generaJwtToken = () => {
+const generaJwtToken = (email) => {
   const secretKey = process.env.SECRET_KEY;
   const options = { expiresIn: '1h' };
 
-  return jwt.sign({}, secretKey, options);
+  return jwt.sign({ email }, secretKey, options);
 };
 
 const isPasswordValid = async ({ email, password }) => {
-  const params = {
-    TableName: 'users',
-    Key: { email },
-  };
+  const user = await userHelpers.getUserByEmail(email);
 
-  const { Item: data } = await dynamoDB.get(params).promise();
-
-  if (data?.password === password) {
+  if (user?.password === password) {
     return true;
   }
 
   return false;
 };
 
-const errorBody = { statusCode: 401, body: {} };
+const errorBody = {
+  statusCode: 401,
+  body: {
+    errors: { credentials: 'The email or password you have entered is invalid' },
+  },
+};
 
 module.exports.handler = async (event) => {
   if (!event?.body) {
@@ -41,7 +40,9 @@ module.exports.handler = async (event) => {
     return errorBody;
   }
 
-  const body = { message: generaJwtToken() };
+  const message = generaJwtToken(email);
+
+  const body = { message };
 
   return {
     statusCode: 200,

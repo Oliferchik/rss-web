@@ -1,15 +1,15 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import Head from 'next/head';
 import { NextPage } from 'next';
+
+import { zodResolver } from '@hookform/resolvers/zod';
 import { TextInput, PasswordInput, Button, Stack, Title, Alert } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import { accountApi } from 'resources/account';
 
 import { handleError } from 'utils';
-
 import { EMAIL_REGEX } from 'app-constants';
 
 const schema = z.object({
@@ -24,7 +24,7 @@ const SignIn: NextPage = () => {
     register, handleSubmit, formState: { errors }, setError,
   } = useForm<SignInParams>({ resolver: zodResolver(schema) });
 
-  const { mutate: signIn, isLoading: isSignInLoading } = accountApi.useSignIn<SignInParams>();
+  const { mutate: signIn, isLoading } = accountApi.useSignIn<SignInParams>();
 
   const onSubmit = (data: SignInParams) => signIn(data, {
     onError: (e) => handleError(e, setError),
@@ -63,7 +63,7 @@ const SignIn: NextPage = () => {
             </Stack>
 
             <Button
-              loading={isSignInLoading}
+              loading={isLoading}
               type="submit"
               fullWidth
               mt={34}

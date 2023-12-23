@@ -14,7 +14,7 @@ export default function handleError(e: any, setError?: UseFormSetError<any>) {
 
   if (setError) {
     Object.keys(errors).forEach((key) => {
-      const message = errors[key].join(' ');
+      const message = errors[key];
 
       setError(key, { message }, { shouldFocus: true });
     });

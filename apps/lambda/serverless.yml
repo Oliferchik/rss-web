@@ -12,5 +12,9 @@ provider:
 functions:
   authenticator:
     handler: functions/authenticator.handler
+  update-session-key: 
+    handler: functions/update-session-key.handler
   get-posts:
     handler: functions/get-posts.handler
+  channels:
+    handler: functions/channels.handler
