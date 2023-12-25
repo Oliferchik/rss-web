@@ -4,7 +4,7 @@ const userHelpers = require('../helpers/user.helpers');
 
 const generaJwtToken = async (email) => {
   const secretKey = process.env.SECRET_KEY;
-  const options = { expiresIn: '1m' };
+  const options = { expiresIn: '1h' };
   const user = await userHelpers.getUserByEmail(email);
 
   return jwt.sign({ email, rssUrl: user.rssFeedUrl }, secretKey, options);
