@@ -1,6 +1,9 @@
 // eslint-disable-next-line max-classes-per-file
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import router from 'next/router';
+
 import { tokenUtil } from 'utils';
+import { RoutePath } from 'routes';
 
 const getHeaders = () => ({
   Authorization: `Bearer ${tokenUtil.getToken()}`,
@@ -38,6 +41,12 @@ const throwApiError = ({
   statusText,
   data,
 }: any) => {
+  if (status === 401) {
+    tokenUtil.removeToken();
+
+    router.push(RoutePath.SignIn);
+  }
+
   console.error(`API Error: ${status} ${statusText}`, data); //eslint-disable-line
   throw new ApiError(data, status, statusText);
 };

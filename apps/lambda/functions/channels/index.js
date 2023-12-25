@@ -43,8 +43,9 @@ module.exports.handler = async (req) => {
     return { statusCode: 200, body };
   } catch (err) {
     const method = req?.requestContext?.http?.method;
-    console.error(`${method} channels error:`, err);
+    console.error(`${method} channels error:`, JSON.stringify(err, null, 2));
+    const statusCode = err.statusCode || 404;
 
-    return { statusCode: 404, body: { error: err.message } };
+    return { statusCode, body: { error: err.message } };
   }
 };

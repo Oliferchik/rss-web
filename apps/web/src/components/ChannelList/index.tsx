@@ -19,7 +19,7 @@ const ChannelList: FC = () => {
     );
   }
 
-  const rows = channels.map((info: ChannelType) => (
+  const rows = channels?.map((info: ChannelType) => (
     <Table.Tr key={info.channelId}>
       <Table.Td align="center">{info.channelId}</Table.Td>
       <Table.Td align="center">{info.lastMessage}</Table.Td>

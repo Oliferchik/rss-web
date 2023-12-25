@@ -1,4 +1,4 @@
-service: rss
+service: rss-feed
 
 frameworkVersion: "3"
 
@@ -14,7 +14,9 @@ functions:
     handler: functions/authenticator.handler
   update-session-key: 
     handler: functions/update-session-key.handler
-  get-posts:
-    handler: functions/get-posts.handler
+  rss-sync:
+    handler: functions/rss-sync.handler
+    events:
+      - schedule: rate(1 hour)
   channels:
     handler: functions/channels.handler

@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken');
 
-const decodeToken = (event) => {
-  const { headers } = event;
+const decodeToken = (req) => {
+  const { headers } = req;
 
-  const errorMessage = 'Invalid token';
+  const invalidTokenError = new Error('Invalid token');
+  invalidTokenError.statusCode = 401;
+
   if (!headers?.authorization) {
     console.error('Header with token doesn`t exist');
 
-    throw new Error(errorMessage);
+    throw invalidTokenError;
   }
 
   const authHeader = headers?.authorization;
@@ -19,7 +21,7 @@ const decodeToken = (event) => {
   } catch (error) {
     console.error('Invalid token', error.message);
 
-    throw new Error(errorMessage);
+    throw invalidTokenError;
   }
 };
 

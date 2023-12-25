@@ -6,6 +6,12 @@ const dynamoDB = class {
     this.client = new AWS.DynamoDB.DocumentClient();
   }
 
+  async getAll() {
+    const { Items } = await this.client.scan({ TableName: this.TableName }).promise();
+
+    return Items;
+  }
+
   get(findQuery) {
     return this.client.get({
       TableName: this.TableName,

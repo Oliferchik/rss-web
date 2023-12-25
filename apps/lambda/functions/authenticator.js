@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 
 const userHelpers = require('../helpers/user.helpers');
 
-const generaJwtToken = (email) => {
+const generaJwtToken = async (email) => {
   const secretKey = process.env.SECRET_KEY;
-  const options = { expiresIn: '1h' };
+  const options = { expiresIn: '1m' };
+  const user = await userHelpers.getUserByEmail(email);
 
-  return jwt.sign({ email }, secretKey, options);
+  return jwt.sign({ email, rssUrl: user.rssFeedUrl }, secretKey, options);
 };
 
 const isPasswordValid = async ({ email, password }) => {
@@ -40,7 +41,7 @@ module.exports.handler = async (event) => {
     return errorBody;
   }
 
-  const message = generaJwtToken(email);
+  const message = await generaJwtToken(email);
 
   const body = { message };
 
