@@ -1,9 +1,8 @@
 import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { accountApi } from 'resources/account';
-
 import { routesConfiguration, ScopeType, LayoutType, RoutePath } from 'routes';
+import { tokenUtil } from 'utils';
 
 import MainLayout from './MainLayout';
 import UnauthorizedLayout from './UnauthorizedLayout';
@@ -34,7 +33,7 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
     return null;
   }
 
-  const token = accountApi.getToken();
+  const token = tokenUtil.getToken();
 
   const { scope, layout } = routesConfiguration[route as RoutePath] || {};
   const Scope = scope ? scopeToComponent[scope] : Fragment;

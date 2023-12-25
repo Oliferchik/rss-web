@@ -1,5 +1,14 @@
 // eslint-disable-next-line max-classes-per-file
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import router from 'next/router';
+
+import { tokenUtil } from 'utils';
+import { RoutePath } from 'routes';
+
+const getHeaders = () => ({
+  Authorization: `Bearer ${tokenUtil.getToken()}`,
+  'Content-Type': 'application/json',
+});
 
 export class ApiError extends Error {
   __proto__: ApiError;
@@ -32,6 +41,12 @@ const throwApiError = ({
   statusText,
   data,
 }: any) => {
+  if (status === 401) {
+    tokenUtil.removeToken();
+
+    router.push(RoutePath.SignIn);
+  }
+
   console.error(`API Error: ${status} ${statusText}`, data); //eslint-disable-line
   throw new ApiError(data, status, statusText);
 };
@@ -73,8 +88,9 @@ class ApiClient {
   get(url: string, params: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'get',
-      url,
+      baseURL: url,
       params,
+      headers: getHeaders(),
       ...requestConfig,
     });
   }
@@ -82,8 +98,9 @@ class ApiClient {
   post(url: string, data: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'post',
-      url,
+      baseURL: url,
       data,
+      headers: getHeaders(),
       ...requestConfig,
     });
   }
@@ -91,7 +108,7 @@ class ApiClient {
   put(url: string, data: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'put',
-      url,
+      baseURL: url,
       data,
       ...requestConfig,
     });
@@ -100,7 +117,7 @@ class ApiClient {
   delete(url: string, data: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'delete',
-      url,
+      baseURL: url,
       data,
       ...requestConfig,
     });
@@ -118,7 +135,6 @@ class ApiClient {
 }
 
 export default new ApiClient({
-  baseURL: 'https://aumcxnet3y45qpceewokrh6mgu0gxnvi.lambda-url.eu-north-1.on.aws/',
   withCredentials: true,
   responseType: 'json',
 });
