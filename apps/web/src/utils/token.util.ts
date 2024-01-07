@@ -5,8 +5,8 @@ import { RoutePath } from 'routes';
 
 const TOKEN_KEY = 'token';
 
-function setToken(message: string) {
-  localStorage.setItem(TOKEN_KEY, message);
+function setToken(token: string) {
+  localStorage.setItem(TOKEN_KEY, token);
 }
 
 function removeToken() {
@@ -28,7 +28,7 @@ const getInfo = () => {
     const currentTime = Math.floor(Date.now() / 1000);
 
     if (currentTime > expirationTime) {
-      console.log('Token has expired');
+      console.info('Token has expired');
 
       removeToken();
 

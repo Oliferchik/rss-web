@@ -1,17 +1,20 @@
 const jwt = require('jsonwebtoken');
 
-const userHelpers = require('../helpers/user.helpers');
+const DynamoDB = require('../../../utils/dynamoDB.utils');
+const { DB_TABLES } = require('../../../constants');
+const UserDto = require('../../../dto/user.dto');
 
 const generaJwtToken = async (email) => {
   const secretKey = process.env.SECRET_KEY;
   const options = { expiresIn: '1h' };
-  const user = await userHelpers.getUserByEmail(email);
 
-  return jwt.sign({ email, rssUrl: user.rssFeedUrl }, secretKey, options);
+  return jwt.sign({ email }, secretKey, options);
 };
 
 const isPasswordValid = async ({ email, password }) => {
-  const user = await userHelpers.getUserByEmail(email);
+  const userTable = new DynamoDB(DB_TABLES.USERS, UserDto);
+  const findQuery = { primaryKeyName: 'email', primaryKeyValue: { S: email } };
+  const user = await userTable.findOne(findQuery);
 
   if (user?.password === password) {
     return true;
@@ -27,13 +30,10 @@ const errorBody = {
   },
 };
 
-module.exports.handler = async (event) => {
-  if (!event?.body) {
+module.exports.handler = async ({ email, password }) => {
+  if (!email || !password) {
     return errorBody;
   }
-
-  const requestBody = JSON.parse(event.body);
-  const { email, password } = requestBody || {};
 
   const isValid = await isPasswordValid({ email, password });
 
@@ -41,12 +41,10 @@ module.exports.handler = async (event) => {
     return errorBody;
   }
 
-  const message = await generaJwtToken(email);
-
-  const body = { message };
+  const token = await generaJwtToken(email);
 
   return {
     statusCode: 200,
-    body: JSON.stringify(body, null, 2),
+    body: { token },
   };
 };

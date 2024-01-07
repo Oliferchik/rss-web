@@ -10,10 +10,12 @@ export function useSignIn<T>() {
   const signIn = (data: T) => apiService.post(LAMBDA_URL.AUTHENTICATE, data);
 
   return useMutation(signIn, {
-    onSuccess: ({ message }: any) => {
-      tokenUtil.setToken(message);
+    onSuccess: ({ body: { token } }: any) => {
+      if (token) {
+        tokenUtil.setToken(token);
 
-      router.push(RoutePath.Home);
+        router.push(RoutePath.Home);
+      }
     },
   });
 }

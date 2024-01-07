@@ -22,7 +22,7 @@ const overwriteFile = async (user, fileData) => {
     ContentType: 'application/rss+xml',
   }).promise();
 
-  console.log(`File "${fileName}" in bucket "${bucketName}" updated successfully.`);
+  console.info(`File "${fileName}" in bucket "${bucketName}" updated successfully.`);
 };
 
 const getRssFile = async (user) => {
@@ -64,7 +64,7 @@ const createRssFile = async (user, fileContent) => {
 
   await s3.putObject(params).promise();
 
-  console.log(`File '${fileName}' created in bucket '${bucketName}'`);
+  console.info(`File '${fileName}' created in bucket '${bucketName}'`);
 
   return fileName;
 };

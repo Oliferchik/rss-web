@@ -4,7 +4,7 @@ import {
   Stack,
 } from '@mantine/core';
 
-import { ChannelList, ChannelInput, RssUrl } from 'components';
+import { ChannelList, ChannelInput } from 'components';
 
 const Home: NextPage = () => (
   <>
@@ -12,7 +12,6 @@ const Home: NextPage = () => (
       <title>Home</title>
     </Head>
     <Stack gap="lg">
-      <RssUrl />
       <ChannelInput />
       <ChannelList />
     </Stack>

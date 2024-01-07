@@ -10,13 +10,19 @@ provider:
     SECRET_KEY: ${opt:stage, 'b6e889ef66b86b26accbb997e80ec0a81dbc137cd5835aeb10b63e4d333c9775'}
 
 functions:
-  authenticator:
-    handler: functions/authenticator.handler
-  update-session-key: 
-    handler: functions/update-session-key.handler
-  rss-sync:
-    handler: functions/rss-sync.handler
+  user-auth:
+    handler: services/user-api/handlers/authorization.handler
+  rss-sync-job:
+    handler: services/rss-api/handlers/sync-job.handler
     events:
       - schedule: rate(1 hour)
-  channels:
-    handler: functions/channels.handler
+  rss-get: 
+    handler: services/rss-api/handlers/get.handler
+  rss-create: 
+    handler: services/rss-api/handlers/create.handler
+  rss-sync: 
+    handler: services/rss-api/handlers/sync.handler
+  authentication: 
+    handler: services/user-api/handlers/authentication.handler
+  # update-telegram-session-key: 
+  #   handler: services/local/update-session-key.handler

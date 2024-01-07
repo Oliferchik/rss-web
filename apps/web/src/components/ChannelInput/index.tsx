@@ -5,7 +5,7 @@ import { TextInput, Group, Button, Container } from '@mantine/core';
 import { channelsApi } from 'resources/channels';
 
 const ChannelInput: FC = () => {
-  const { mutate: addChannel, isLoading } = channelsApi.useAdd();
+  const { mutate: addChannel, isLoading } = channelsApi.useCreate();
 
   const [channelId, setChannelId] = useState('');
   const [error, setError] = useState('');
