@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken');
 
-const DynamoDB = require('../../../utils/dynamoDB.utils');
+const DynamoDB = require('../../../sdk/dynamoDB');
+
 const { DB_TABLES } = require('../../../constants');
-const UserDto = require('../../../dto/user.dto');
+
+const UserDto = require('../dto/user.dto');
 
 const generaJwtToken = async (email) => {
   const secretKey = process.env.SECRET_KEY;

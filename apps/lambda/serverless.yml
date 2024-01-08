@@ -1,11 +1,16 @@
 service: rss-feed
 
 frameworkVersion: "3"
-
+  
 provider:
   name: aws
+  profile: serhei
+  stage: dev
+  memorySize: 512
   runtime: nodejs18.x
-  region: ${opt:region, 'eu-north-1'}
+  region: ${opt:region, "eu-north-1"}
+  iam:
+    role: arn:aws:iam::671661975001:role/rss-lambda
   environment: 
     SECRET_KEY: ${opt:stage, 'b6e889ef66b86b26accbb997e80ec0a81dbc137cd5835aeb10b63e4d333c9775'}
 

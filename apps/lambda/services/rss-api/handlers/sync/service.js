@@ -1,10 +1,12 @@
 const RSS = require('rss');
 
-const DynamoDB = require('../../../../utils/dynamoDB.utils');
 const { DB_TABLES } = require('../../../../constants');
-const RssDto = require('../../../../dto/rss.dto');
-const s3Sdk = require('../../../../sdk/s3.sdk');
-const telegramSdk = require('../../../../sdk/telegram.sdk');
+
+const DynamoDB = require('../../../../sdk/dynamoDB');
+const s3Sdk = require('../../../../sdk/s3');
+const telegramSdk = require('../../../../sdk/telegram');
+
+const RssDto = require('../../dto/rss');
 
 const initParserChannel = (telegramClient) => async (channelId, lastMessage) => {
   const [

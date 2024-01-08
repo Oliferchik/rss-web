@@ -1,6 +1,6 @@
-const DynamoDB = require('../../../../utils/dynamoDB.utils');
+const DynamoDB = require('../../../../sdk/dynamoDB');
 const { DB_TABLES } = require('../../../../constants');
-const RssDto = require('../../../../dto/rss.dto');
+const RssDto = require('../../dto/rss');
 
 const getRssFeeds = async (userEmail) => {
   try {

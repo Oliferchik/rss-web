@@ -1,9 +1,9 @@
 const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 
-const DynamoDB = require('../../../../utils/dynamoDB.utils');
+const DynamoDB = require('../../../../sdk/dynamoDB');
 const { DB_TABLES } = require('../../../../constants');
 
-const RssDto = require('../../../../dto/rss.dto');
+const RssDto = require('../../dto/rss');
 
 const invokeRssSync = async ({ email, channelId }) => {
   const lambdaClient = new LambdaClient();

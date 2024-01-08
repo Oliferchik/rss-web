@@ -3,10 +3,11 @@ const input = require('input');
 const { TelegramClient } = require('telegram');
 const { StringSession } = require('telegram/sessions');
 
-const DynamoDB = require('../utils/dynamoDB.utils');
-const TelegramDto = require('../dto/telegram_client.dto');
+const { DB_TABLES } = require('../../constants');
 
-const { DB_TABLES } = require('../constants');
+const DynamoDB = require('../dynamoDB');
+
+const TelegramDto = require('./dto');
 
 const API_ID = 25845642;
 

@@ -1,4 +1,4 @@
-const { updateSessionKey } = require('../../sdk/telegram.sdk');
+const { updateSessionKey } = require('../../sdk/telegram');
 
 module.exports.handler = async () => {
   try {

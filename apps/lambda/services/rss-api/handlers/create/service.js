@@ -1,12 +1,11 @@
 const RSS = require('rss');
 
-const DynamoDB = require('../../../../utils/dynamoDB.utils');
-
-const telegramSdk = require('../../../../sdk/telegram.sdk');
-const s3Sdk = require('../../../../sdk/s3.sdk');
+const DynamoDB = require('../../../../sdk/dynamoDB');
+const telegramSdk = require('../../../../sdk/telegram');
+const s3Sdk = require('../../../../sdk/s3');
 
 const { DB_TABLES } = require('../../../../constants');
-const RssDto = require('../../../../dto/rss.dto');
+const RssDto = require('../../dto/rss');
 
 const initRssFeed = async ({ userEmail, channelId }) => {
   const fileName = await s3Sdk.createRssFile({ userEmail, channelId });
