@@ -4,6 +4,7 @@ import router from 'next/router';
 
 import { tokenUtil } from 'utils';
 import { RoutePath } from 'routes';
+import { API_URL } from 'app-constants';
 
 const getHeaders = () => ({
   Authorization: `Bearer ${tokenUtil.getToken()}`,
@@ -88,7 +89,7 @@ class ApiClient {
   get(url: string, params: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'get',
-      baseURL: url,
+      url,
       params,
       headers: getHeaders(),
       ...requestConfig,
@@ -98,7 +99,7 @@ class ApiClient {
   post(url: string, data: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'post',
-      baseURL: url,
+      url,
       data,
       headers: getHeaders(),
       ...requestConfig,
@@ -108,7 +109,7 @@ class ApiClient {
   put(url: string, data: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'put',
-      baseURL: url,
+      url,
       data,
       ...requestConfig,
     });
@@ -117,7 +118,7 @@ class ApiClient {
   delete(url: string, data: any = {}, requestConfig: AxiosRequestConfig<any> = {}): Promise<any> {
     return this._api({
       method: 'delete',
-      baseURL: url,
+      url,
       data,
       ...requestConfig,
     });
@@ -135,6 +136,7 @@ class ApiClient {
 }
 
 export default new ApiClient({
+  baseURL: API_URL,
   withCredentials: true,
   responseType: 'json',
 });

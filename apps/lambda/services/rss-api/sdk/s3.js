@@ -8,7 +8,7 @@ const {
 } = require('@aws-sdk/client-s3');
 const { fromUtf8 } = require('@aws-sdk/util-utf8-node');
 
-const s3Client = new S3Client({ region: 'eu-north-1' });
+const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
 const RSS_BUCKET_NAME = 'my-hosted-rss-feeds';
 

@@ -23,7 +23,7 @@ interface PageConfigProps {
 }
 
 const PageConfig: FC<PageConfigProps> = ({ children }) => {
-  const { route, push } = useRouter();
+  const { route, push, query } = useRouter();
 
   const [isClient, setIsClient] = useState(false);
 
@@ -40,7 +40,12 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
   const Layout = layout ? layoutToComponent[layout] : Fragment;
 
   if (scope === ScopeType.PRIVATE && !token) {
-    push(RoutePath.SignIn);
+    if (query.token) {
+      tokenUtil.setToken(query.token as string);
+    }
+
+    const path = query.token ? RoutePath.Home : RoutePath.SignIn;
+    push(path);
 
     return null;
   }

@@ -1,15 +1,14 @@
 const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 
-const DynamoDB = require('../../../../sdk/dynamoDB');
-const { DB_TABLES } = require('../../../../constants');
+const table = require('../../repository');
 
-const RssDto = require('../../dto/rss');
+const RSS_SYNC_FUNCTION_NAME = 'rss-feed-dev-rss-sync';
 
 const invokeRssSync = async ({ email, channelId }) => {
   const lambdaClient = new LambdaClient();
 
   const invokeParams = {
-    FunctionName: 'rss-feed-dev-rss-sync',
+    FunctionName: RSS_SYNC_FUNCTION_NAME,
     InvocationType: 'Event',
     Payload: JSON.stringify({ email, channelId }),
   };
@@ -25,11 +24,7 @@ const invokeRssSync = async ({ email, channelId }) => {
   }
 };
 
-const getRssFeeds = async () => {
-  const rssTable = new DynamoDB(DB_TABLES.RSS, RssDto);
-
-  return rssTable.getAll();
-};
+const getRssFeeds = async () => table.getAll();
 
 const sync = async () => {
   const rssFeeds = await getRssFeeds();

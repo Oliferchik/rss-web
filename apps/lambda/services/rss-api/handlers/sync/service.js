@@ -1,12 +1,7 @@
 const RSS = require('rss');
 
-const { DB_TABLES } = require('../../../../constants');
-
-const DynamoDB = require('../../../../sdk/dynamoDB');
-const s3Sdk = require('../../../../sdk/s3');
-const telegramSdk = require('../../../../sdk/telegram');
-
-const RssDto = require('../../dto/rss');
+const sdk = require('../../sdk');
+const table = require('../../repository');
 
 const initParserChannel = (telegramClient) => async (channelId, lastMessage) => {
   const [
@@ -32,7 +27,7 @@ const initParserChannel = (telegramClient) => async (channelId, lastMessage) => 
     .map((item) => ({
       title: channelInfo.title,
       description: item.message,
-      url: telegramSdk.getArticleUrl({ channelId, articleId: item.id }),
+      url: sdk.telegram.getArticleUrl({ channelId, articleId: item.id }),
       guid: item.id,
       date: new Date(item.date),
     }))
@@ -44,27 +39,24 @@ const initParserChannel = (telegramClient) => async (channelId, lastMessage) => 
 };
 
 const getRssFeed = async ({ userEmail, channelId }) => {
-  const rssTable = new DynamoDB(DB_TABLES.RSS, RssDto);
   const findQuery = [
     { fieldName: 'userEmail', fieldValue: { S: userEmail } },
     { fieldName: 'channelId', fieldValue: { S: channelId } },
   ];
-  const [rssFeed] = await rssTable.find(findQuery);
+  const [rssFeed] = await table.find(findQuery);
 
   return rssFeed;
 };
 
 const getChannelsInfo = async (channelId, lastMessageNumber) => {
-  const client = await telegramSdk.getTelegramClient();
+  const client = await sdk.telegram.getTelegramClient();
   const parseChannel = initParserChannel(client);
 
   return parseChannel(channelId, lastMessageNumber);
 };
 
 const updateLastMessageCount = async (rssFeedUrl, lastMessageNumber) => {
-  const rssTable = new DynamoDB(DB_TABLES.RSS, RssDto);
-
-  await rssTable.updateField(
+  await table.updateField(
     { url: { S: rssFeedUrl } },
     { fieldName: 'lastMessage', fieldValue: { N: String(lastMessageNumber) } },
   );
@@ -72,7 +64,7 @@ const updateLastMessageCount = async (rssFeedUrl, lastMessageNumber) => {
 
 const sync = async ({ userEmail, channelId }) => {
   try {
-    const xmlString = await s3Sdk.getRssFile({ channelId, userEmail });
+    const xmlString = await sdk.s3.getRssFile({ channelId, userEmail });
     const newFeed = new RSS({ generator: xmlString });
 
     const rssFeed = await getRssFeed({ userEmail, channelId });
@@ -82,7 +74,7 @@ const sync = async ({ userEmail, channelId }) => {
 
     const newXml = newFeed.xml({ indent: true });
 
-    await s3Sdk.overwriteRssFile({ userEmail, channelId }, newXml);
+    await sdk.s3.overwriteRssFile({ userEmail, channelId }, newXml);
 
     await updateLastMessageCount(rssFeed.url, newChannelInfo.total);
   } catch (err) {

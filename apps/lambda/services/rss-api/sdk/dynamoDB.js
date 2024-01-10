@@ -6,12 +6,10 @@ const {
   UpdateItemCommand,
 } = require('@aws-sdk/client-dynamodb');
 
-const { REGION } = require('../constants');
-
 const dynamoDB = class {
   constructor(TableName, dto) {
     this.TableName = TableName;
-    this.client = new DynamoDBClient({ region: REGION });
+    this.client = new DynamoDBClient({ region: process.env.AWS_REGION });
     this.dto = dto;
   }
 

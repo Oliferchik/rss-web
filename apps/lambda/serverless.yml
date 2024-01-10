@@ -8,15 +8,21 @@ provider:
   stage: dev
   memorySize: 512
   runtime: nodejs18.x
-  region: ${opt:region, "eu-north-1"}
+  region: eu-north-1
   iam:
-    role: arn:aws:iam::671661975001:role/rss-lambda
-  environment: 
-    SECRET_KEY: ${opt:stage, 'b6e889ef66b86b26accbb997e80ec0a81dbc137cd5835aeb10b63e4d333c9775'}
+    role: arn:aws:iam::${aws:accountId}:role/rss-lambda
+  environment:
+    AWS_ACCOUNT_ID: ${aws:accountId}
+    AWS_GATEWAY_ID: ${ssm:RSS_GATEWAY_API_ID}
+    GOOGLE_CLIENT_ID: ${ssm:GOOGLE_CLIENT_ID}
+    GOOGLE_CLIENT_SECRET: ${ssm:GOOGLE_CLIENT_SECRET}
+    TOKEN_SECRET_KEY: ${ssm:TOKEN_SECRET_KEY}
+    TELEGRAM_API_ID: ${ssm:TELEGRAM_API_ID}
+    TELEGRAM_API_HASH: ${ssm:TELEGRAM_API_HASH}
+    TELEGRAM_SESSION_KEY: ${ssm:TELEGRAM_SESSION_KEY}
+    WEB_URL: ${ssm:RSS_WEB_URL}
 
 functions:
-  user-auth:
-    handler: services/user-api/handlers/authorization.handler
   rss-sync-job:
     handler: services/rss-api/handlers/sync-job.handler
     events:
@@ -29,5 +35,10 @@ functions:
     handler: services/rss-api/handlers/sync.handler
   authentication: 
     handler: services/user-api/handlers/authentication.handler
-  # update-telegram-session-key: 
-  #   handler: services/local/update-session-key.handler
+  google-auth-url: 
+    handler: services/user-api/handlers/google-auth/get-url.handler
+  google-auth-webhook: 
+    handler: services/user-api/handlers/google-auth/webhook.handler
+  # local
+  # get-telegram-session-key: 
+  #   handler: services/local/get-session-key.handler

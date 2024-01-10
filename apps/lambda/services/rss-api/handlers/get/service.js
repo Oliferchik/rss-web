@@ -1,12 +1,9 @@
-const DynamoDB = require('../../../../sdk/dynamoDB');
-const { DB_TABLES } = require('../../../../constants');
-const RssDto = require('../../dto/rss');
+const table = require('../../repository');
 
 const getRssFeeds = async (userEmail) => {
   try {
-    const rssTable = new DynamoDB(DB_TABLES.RSS, RssDto);
     const findQuery = [{ fieldName: 'userEmail', fieldValue: { S: userEmail } }];
-    const rssFeeds = await rssTable.find(findQuery);
+    const rssFeeds = await table.find(findQuery);
 
     return rssFeeds;
   } catch (err) {

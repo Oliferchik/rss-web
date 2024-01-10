@@ -1,47 +1,42 @@
 const RSS = require('rss');
 
-const DynamoDB = require('../../../../sdk/dynamoDB');
-const telegramSdk = require('../../../../sdk/telegram');
-const s3Sdk = require('../../../../sdk/s3');
-
-const { DB_TABLES } = require('../../../../constants');
-const RssDto = require('../../dto/rss');
+const sdk = require('../../sdk');
+const table = require('../../repository');
 
 const initRssFeed = async ({ userEmail, channelId }) => {
-  const fileName = await s3Sdk.createRssFile({ userEmail, channelId });
-  const url = await s3Sdk.generateRssPublicURL(fileName);
+  const fileName = await sdk.s3.createRssFile({ userEmail, channelId });
+  const url = await sdk.s3.generateRssPublicURL(fileName);
 
   const feed = new RSS({
     title: `Telegram channel(${channelId} rss feed`,
     description: `Aggregation of articles from ${channelId} telegram channel`,
     feed_url: url,
-    site_url: telegramSdk.getChannelUrl(channelId),
+    site_url: sdk.telegram.getChannelUrl(channelId),
     language: 'en',
   });
 
   const xml = feed.xml({ indent: true });
 
-  await s3Sdk.overwriteRssFile({ userEmail, channelId }, xml);
+  await sdk.s3.overwriteRssFile({ userEmail, channelId }, xml);
 
   return url;
 };
 
 const create = async ({ channelId, email: userEmail }) => {
   try {
-    const client = await telegramSdk.getTelegramClient();
+    const client = await sdk.telegram.getTelegramClient();
     const [messages, url] = await Promise.all([
       client.getMessages(channelId, { limit: 1 }),
       initRssFeed({ userEmail, channelId }),
     ]);
 
-    const rssTable = new DynamoDB(DB_TABLES.RSS, RssDto);
     const payload = {
       url,
       channelId,
       lastMessage: messages.total,
       userEmail,
     };
-    await rssTable.insert(payload);
+    await table.insert(payload);
 
     return payload;
   } catch (err) {
@@ -52,13 +47,12 @@ const create = async ({ channelId, email: userEmail }) => {
 };
 
 const getRssFeed = async ({ channelId, email: userEmail }) => {
-  const rssTable = new DynamoDB(DB_TABLES.RSS, RssDto);
   const findQuery = [
     { fieldName: 'userEmail', fieldValue: { S: userEmail } },
     { fieldName: 'channelId', fieldValue: { S: channelId } },
 
   ];
-  const [rssFeed] = await rssTable.find(findQuery);
+  const [rssFeed] = await table.find(findQuery);
 
   return rssFeed;
 };
